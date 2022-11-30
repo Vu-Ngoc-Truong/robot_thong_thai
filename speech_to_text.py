@@ -22,10 +22,10 @@ def listen_audio(language='vi'):
             print("energy_threshold: ", c.energy_threshold)
             buffer = source.stream.read(source.CHUNK)
             energy = audioop.rms(buffer, source.SAMPLE_WIDTH)  # energy of the audio signal
-            print("energy: ", energy)
+            # print("energy: ", energy)
             seconds_per_buffer = (source.CHUNK + 0.0) / source.SAMPLE_RATE
             damping = c.dynamic_energy_adjustment_damping ** seconds_per_buffer  # account for different chunk sizes and rates
-            print("damping: ", damping )
+            # print("damping: ", damping )
             playsound.playsound('/home/pi/code_ws/robot_thong_thai/logon.mp3', True)
             print('Listening...')
             audio = c.listen(source) # Biến audio là giá trị dạng chuỗi sau khi máy nghe và nhận dạng từ nguồn vào
