@@ -80,6 +80,7 @@ class AskAndAnswer():
         self.mon_hoc_index = index
         self.mycol= self.listCollection[index]
         self.linh_vuc = self.list_mon_hoc[index]
+        print("linh vuc : ",self.linh_vuc)
 
     def chon_so_cau_hoi(self):
         print("num_of_ask index: ", self.ui.cbbSoCauHoi.currentIndex())
