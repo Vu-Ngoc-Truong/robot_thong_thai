@@ -30,8 +30,11 @@ class MongodbStorage:
     def __init__(self, connectionString="mongodb://localhost:27017/"):
         self.client = MongoClient(connectionString)
         self.database = self.getDatabase("admin")
-        self.lichsuCollection = self.database["lich_su"]
-        self.vanhocCollection = self.database["van_hoc"]
+        self.toanhocCollection  = self.database["toan_hoc"]
+        self.vanhocCollection   = self.database["van_hoc"]
+        self.tienganhCollection = self.database["tieng_anh"]
+        self.lichsuCollection   = self.database["lich_su"]
+
     # Save data need update
         self.fs = GridFSBucket(self.database)
 
