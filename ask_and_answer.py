@@ -129,7 +129,7 @@ class AskAndAnswer():
                 print(x)
                 if have_image =="Có":
 
-                    img_path = os.path.dirname(os.path.realpath(__file__)) + "/image/" +self.list_img_path[self.mon_hoc_index] +"/cau"+ str(self.ask_idx)+".png"
+                    img_path = os.path.dirname(os.path.realpath(__file__)) + "/image/" +self.list_img_path[self.mon_hoc_index] +"/cau"+ str(self.ask_idx)+".jpg"
                     print(img_path)
                     img_resize = QtGui.QImage(img_path).scaledToWidth(630)
                     self.ui.txtImage.setPixmap(QtGui.QPixmap.fromImage(img_resize))
