@@ -82,6 +82,7 @@ class AskAndAnswer():
         self.linh_vuc = self.list_mon_hoc[index]
         print("linh vuc : ",self.linh_vuc)
 
+
     def chon_so_cau_hoi(self):
         print("num_of_ask index: ", self.ui.cbbSoCauHoi.currentIndex())
         index = self.ui.cbbSoCauHoi.currentIndex()
@@ -94,7 +95,7 @@ class AskAndAnswer():
         self.ui.txtResult.setText(str(self.num_of_correct) +"/"+  str(self.num_of_ask))
         print((str(self.num_of_correct) +"/"+  str(self.num_of_ask)))
 
-        text_to_speech('Bạn đã chọn lĩnh vực {} với gói {} câu hỏi.Let go!'.format(self.linh_vuc, self.so_cau_hoi))
+        text_to_speech('Bạn đã chọn lĩnh vực {} với gói {} câu hỏi.'.format(self.linh_vuc, self.so_cau_hoi))
         for i in  range(self.num_of_ask):
             if self.exit :
                 break
@@ -145,16 +146,24 @@ class AskAndAnswer():
                     print("B. " + x['Phương án B'])
                     print("C. " + x['Phương án C'])
                     print("D. " + x['Phương án D'])
+                    if self.linh_vuc == "Tiếng Anh":
+                        _language = 'en'
+                    else:
+                        _language = 'vi'
                     self.ui.txtCauHoi.setText('Câu hỏi: \n  '+ x['Câu hỏi'])
-                    text_to_speech(x['Câu hỏi'])
+                    text_to_speech(x['Câu hỏi'],_language)
                     self.ui.txtDapAnA.setText("A. " +x['Phương án A'])
-                    text_to_speech('Phương án A .' + x['Phương án A'])
+                    text_to_speech('Phương án A .')
+                    text_to_speech(x['Phương án A'], _language)
                     self.ui.txtDapAnB.setText("B. " +x['Phương án B'])
-                    text_to_speech('Phương án B .' + x['Phương án B'])
+                    text_to_speech('Phương án B .')
+                    text_to_speech(x['Phương án B'], _language)
                     self.ui.txtDapAnC.setText("C. " +x['Phương án C'])
-                    text_to_speech('Phương án C .' + x['Phương án C'])
+                    text_to_speech('Phương án C .')
+                    text_to_speech(x['Phương án C'], _language)
                     self.ui.txtDapAnD.setText("D. " +x['Phương án D'])
-                    text_to_speech('Phương án D .' + x['Phương án D'])
+                    text_to_speech('Phương án D .')
+                    text_to_speech(x['Phương án D'], _language)
             except:
                 print("Lỗi khi tìm câu hỏi trong database!")
                 text_to_speech("Lỗi khi tìm câu hỏi trong database!")

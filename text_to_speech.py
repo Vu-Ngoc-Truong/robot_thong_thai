@@ -15,4 +15,4 @@ def text_to_speech(text, language='vi'):
     playsound.playsound('output.mp3', True)
     os.remove("output.mp3")
 
-# speak("Xin chào buổi tối")
+# text_to_speech("Toi la Huy, Toi truong binh minh")
