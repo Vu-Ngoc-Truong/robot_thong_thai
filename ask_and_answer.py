@@ -124,6 +124,11 @@ class AskAndAnswer():
             else:
                 print("Lỗi khi lấy câu hỏi từ thư viện!")
                 break
+
+            if self.linh_vuc == "Tiếng Anh":
+                _language = 'en'
+            else:
+                _language = 'vi'
             try:
                 x = self.mycol.find_one({"STT": str(self.ask_idx)})
                 have_image = x["Hình ảnh"] if "Hình ảnh" in x else "Không"
@@ -146,10 +151,6 @@ class AskAndAnswer():
                     print("B. " + x['Phương án B'])
                     print("C. " + x['Phương án C'])
                     print("D. " + x['Phương án D'])
-                    if self.linh_vuc == "Tiếng Anh":
-                        _language = 'en'
-                    else:
-                        _language = 'vi'
                     self.ui.txtCauHoi.setText('Câu hỏi: \n  '+ x['Câu hỏi'])
                     text_to_speech(x['Câu hỏi'],_language)
                     self.ui.txtDapAnA.setText("A. " +x['Phương án A'])
@@ -199,11 +200,13 @@ class AskAndAnswer():
                         self.num_of_correct += 1
                         print("Chúc mừng bạn đã trả lời đúng!")
                         text_to_speech("Chúc mừng bạn đã trả lời đúng!")
-                        text_to_speech('Đáp án đúng là: ' + x['Đáp án'] + "." +  x['Phương án '+ x['Đáp án']])
+                        text_to_speech('Đáp án đúng là: ' + x['Đáp án'] + ".")
+                        text_to_speech(x['Phương án '+ x['Đáp án']],_language)
                     else:
                         print("Xin chia buồn vì bạn đã trả lời sai!")
                         text_to_speech("Xin chia buồn vì bạn đã trả lời sai!")
-                        text_to_speech('Đáp án đúng là: ' + x['Đáp án'] + "." +  x['Phương án '+ x['Đáp án']])
+                        text_to_speech('Đáp án đúng là: ' + x['Đáp án'] + ".")
+                        text_to_speech(x['Phương án '+ x['Đáp án']], _language)
                 else:
                     print("Không nhận được câu trả lời hợp lệ.")
                     text_to_speech("Xin lỗi, chúng tôi không nhận được câu trả lời hợp lệ.")
