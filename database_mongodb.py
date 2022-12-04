@@ -34,6 +34,7 @@ class MongodbStorage:
         self.vanhocCollection   = self.database["van_hoc"]
         self.tienganhCollection = self.database["tieng_anh"]
         self.lichsuCollection   = self.database["lich_su"]
+        self.dialyCollection   = self.database["dia_ly"]
 
     # Save data need update
         self.fs = GridFSBucket(self.database)

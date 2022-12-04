@@ -46,15 +46,15 @@ class AskAndAnswer():
         self.linh_vuc = ""
         self.so_cau_hoi = ""
         self.list_so_cau_hoi = [1, 3, 5]
-        self.list_mon_hoc = ["Toán học","Văn học","Tiếng Anh", "Lịch sử "]
-        self.list_img_path = ["Toan","Van","Anh","Su"]
+        self.list_mon_hoc = ["Toán học","Văn học","Tiếng Anh", "Lịch sử ","Địa lý"]
+        self.list_img_path = ["Toan","Van","Anh","Su","Dia"]
         self.mon_hoc_index = 0
 
 
         self.ui.txtResult.setStyleSheet('color: red')
 
         # Chọn môn học
-        self.listCollection = [self.mydb.toanhocCollection,self.mydb.vanhocCollection,self.mydb.tienganhCollection, self.mydb.lichsuCollection]
+        self.listCollection = [self.mydb.toanhocCollection,self.mydb.vanhocCollection,self.mydb.tienganhCollection, self.mydb.lichsuCollection,self.mydb.dialyCollection]
         self.listAskNum = [1, 3, 5]
         self.ui.cbbMonHoc.addItems(self.list_mon_hoc)
         self.ui.cbbSoCauHoi.addItems(['1', '3', '5'])
