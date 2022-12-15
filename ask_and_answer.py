@@ -45,7 +45,7 @@ class AskAndAnswer():
         self.test_status = False
         self.linh_vuc = ""
         self.so_cau_hoi = ""
-        self.list_so_cau_hoi = [1, 3, 5]
+        self.list_so_cau_hoi = [1, 2, 5]
         self.list_mon_hoc = ["Toán học","Văn học","Tiếng Anh", "Lịch sử ","Địa lý"]
         self.list_img_path = ["Toan","Van","Anh","Su","Dia"]
         self.mon_hoc_index = 0
