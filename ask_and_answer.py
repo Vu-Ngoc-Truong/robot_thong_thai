@@ -117,32 +117,31 @@ class AskAndAnswer():
             # print("img read")
 
             image_predict += 1
-            if ret:
-                # Chuyen gray
-                # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            # Chuyen gray
+            # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-                img_draw = img
-                if image_predict >= 5:
-                    image_predict = 0
-                    predictions = predict(img, self.knn_clf)
-                    print(predictions)
+            img_draw = img
+            if image_predict >= 5:
+                image_predict = 0
+                predictions = predict(img, self.knn_clf)
+                print(predictions)
 
-                    # Print results on the console
-                for name, (top, right, bottom, left) in predictions:
-                    # print("- Found {} at ({}, {}) ".format(name, left, top))
-                    # print("A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(top, left, bottom, right))
-                    img_draw = cv2.rectangle(img_draw,(left,top),(right,bottom),(0,255,0),2)
-                    # See if the face is a match for the known face(s)
-                    (text_width, text_height) = cv2.getTextSize(name, cv2.FONT_HERSHEY_SIMPLEX,1,2)[0]
-                    cv2.rectangle(img_draw,(left,bottom),(right,bottom + text_height + 20),(255,100,0), -1)
-                    cv2.putText(img_draw, name, (left + 10, bottom + text_height + 10),cv2.FONT_HERSHEY_SIMPLEX, 0.8,(0,0,255), 2, cv2.LINE_AA)
+                # Print results on the console
+            for name, (top, right, bottom, left) in predictions:
+                # print("- Found {} at ({}, {}) ".format(name, left, top))
+                # print("A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(top, left, bottom, right))
+                img_draw = cv2.rectangle(img_draw,(left,top),(right,bottom),(0,255,0),2)
+                # See if the face is a match for the known face(s)
+                (text_width, text_height) = cv2.getTextSize(name, cv2.FONT_HERSHEY_SIMPLEX,1,2)[0]
+                cv2.rectangle(img_draw,(left,bottom),(right,bottom + text_height + 20),(255,100,0), -1)
+                cv2.putText(img_draw, name, (left + 10, bottom + text_height + 10),cv2.FONT_HERSHEY_SIMPLEX, 0.8,(0,0,255), 2, cv2.LINE_AA)
 
-                    if name in self.dict_faces:
-                        print("Tim thay face: ", name)
-                        face_name = name
-                        find_face_ok  = True
+                if name in self.dict_faces:
+                    print("Tim thay face: ", name)
+                    face_name = name
+                    find_face_ok  = True
 
-                cv2.imshow("Tìm khuôn mặt", img_draw)
+            cv2.imshow("Tìm khuôn mặt", img_draw)
             key = cv2.waitKey(1)
             if key==ord('q'):
                 break
