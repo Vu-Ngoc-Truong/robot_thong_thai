@@ -23,7 +23,7 @@ import numpy as np
 import pickle
 
 # select camera source
-use_picam2 = False
+use_picam2 = True
 
 if use_picam2:
     # Use camera of raspberry #####################################################
@@ -108,8 +108,13 @@ class AskAndAnswer():
 
         while (counter< 100) and (not find_face_ok):
             counter += 1
-            ret, img = self.camera.read()
-            print("img read")
+            if use_picam2:
+                # Use camera Pi ##############################################
+                img = picam2.capture_array()
+            else:
+                # Use camera laptop  #######################################
+                ret, img = self.camera.read()
+            # print("img read")
 
             image_predict += 1
             if ret:
