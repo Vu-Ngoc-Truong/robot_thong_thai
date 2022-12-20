@@ -17,7 +17,23 @@ import time
 from ask_and_answer_ui import Ui_MainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import Qt
+from face_recognition_knn_camera import predict
+import cv2
+import numpy as np
+import pickle
+
+# select camera source
+use_picam2 = False
+
+if use_picam2:
+    # Use camera of raspberry #####################################################
+    from picamera2 import Picamera2, Preview
+    picam2 = Picamera2()
+    picam2.configure(picam2.create_preview_configuration(main={"format": 'RGB888', "size": (680, 400)}))
+    picam2.start()
+
 HOME = os.path.expanduser('~')
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 class AskAndAnswer():
     def __init__(self):
@@ -49,9 +65,17 @@ class AskAndAnswer():
         self.list_mon_hoc = ["Toán học","Văn học","Tiếng Anh", "Lịch sử ","Địa lý"]
         self.list_img_path = ["Toan","Van","Anh","Su","Dia"]
         self.mon_hoc_index = 0
-
-
         self.ui.txtResult.setStyleSheet('color: red')
+
+        self.dict_faces = {"Huy": "Huy", "Huong": "Hưởng", "Tien":"Tiến"}
+
+        if not use_picam2:
+            # Use laptop camera ####################################################
+            self.camera = cv2.VideoCapture(0)
+
+        # Load a trained KNN model (if one was passed in)
+        with open(os.path.join(dir_path, "model","trained_knn_model.clf"), 'rb') as f:
+            self.knn_clf = pickle.load(f)
 
         # Chọn môn học
         self.listCollection = [self.mydb.toanhocCollection,self.mydb.vanhocCollection,self.mydb.tienganhCollection, self.mydb.lichsuCollection,self.mydb.dialyCollection]
@@ -74,6 +98,54 @@ class AskAndAnswer():
             self.MainWindow.destroy()
             self.app.quit()
 
+    def face_detect(self):
+        counter = 0
+        image_predict = 0
+        predictions = ()
+        face_name =""
+        find_face_ok = False
+        print("start find face")
+
+        while (counter< 100) and (not find_face_ok):
+            counter += 1
+            ret, img = self.camera.read()
+            print("img read")
+
+            image_predict += 1
+            if ret:
+                # Chuyen gray
+                # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+                img_draw = img
+                if image_predict >= 5:
+                    image_predict = 0
+                    predictions = predict(img, self.knn_clf)
+                    print(predictions)
+
+                    # Print results on the console
+                for name, (top, right, bottom, left) in predictions:
+                    # print("- Found {} at ({}, {}) ".format(name, left, top))
+                    # print("A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(top, left, bottom, right))
+                    img_draw = cv2.rectangle(img_draw,(left,top),(right,bottom),(0,255,0),2)
+                    # See if the face is a match for the known face(s)
+                    (text_width, text_height) = cv2.getTextSize(name, cv2.FONT_HERSHEY_SIMPLEX,1,2)[0]
+                    cv2.rectangle(img_draw,(left,bottom),(right,bottom + text_height + 20),(255,100,0), -1)
+                    cv2.putText(img_draw, name, (left + 10, bottom + text_height + 10),cv2.FONT_HERSHEY_SIMPLEX, 0.8,(0,0,255), 2, cv2.LINE_AA)
+
+                    if name in self.dict_faces:
+                        print("Tim thay face: ", name)
+                        face_name = name
+                        find_face_ok  = True
+
+                cv2.imshow("Tìm khuôn mặt", img_draw)
+            key = cv2.waitKey(1)
+            if key==ord('q'):
+                break
+        # self.camera.release()
+        cv2.destroyAllWindows()
+        return face_name
+
+
     def chon_mon_hoc(self):
         print("field index: ", self.ui.cbbMonHoc.currentIndex())
         index = self.ui.cbbMonHoc.currentIndex()
@@ -91,6 +163,26 @@ class AskAndAnswer():
 
     def run_test(self):
         self.test_status = True
+        # Check face
+        face_id = self.face_detect()
+        print(face_id)
+        if  not face_id == "":
+            try:
+                text_to_speech("Xin chào bạn {}".format(self.dict_faces[face_id]))
+                print("Hello {}".format(self.dict_faces[face_id]))
+            except:
+                print("Lỗi khi phát âm")
+                self.test_status = False
+        else:
+            try:
+                text_to_speech("Xin lỗi chúng tôi không tìm thấy khuôn mặt hợp lệ!")
+                self.test_status = False
+                print("Khong thay mat hop le")
+                return
+            except:
+                print("Lỗi khi phát âm")
+                self.test_status = False
+
         # Print collection before update
         self.ui.txtResult.setText(str(self.num_of_correct) +"/"+  str(self.num_of_ask))
         print((str(self.num_of_correct) +"/"+  str(self.num_of_ask)))

@@ -46,4 +46,4 @@ if __name__ == '__main__':
     # creat_folder(path_dir + "/train",labels)
     # delete_all_file(path_dir + "/data")
 
-    rename_file(os.path.join(path_dir,"face_img","train","Huong"), "Huong")
+    rename_file(os.path.join(path_dir,"face_img","train","Tien"), "Tien")

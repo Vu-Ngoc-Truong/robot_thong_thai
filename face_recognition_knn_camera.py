@@ -48,51 +48,53 @@ def predict( X_img, knn_clf=None, distance_threshold=0.4):
     # Predict classes and remove classifications that aren't within the threshold
     return [(pred, loc) if rec else ("unknown", loc) for pred, loc, rec in zip(knn_clf.predict(faces_encodings), X_face_locations, are_matches)]
 
-camera = cv2.VideoCapture(0)
-# Load a trained KNN model (if one was passed in)
-with open(os.path.join(dir_path, "model","trained_knn_model.clf"), 'rb') as f:
-    knn_clf = pickle.load(f)
+if __name__ == '__main__':
 
-image_predict = 0
-predictions = ()
-fps = 0
-pre_time = time.time()
-while (True):
-    ret, img = camera.read()
-    fps +=1
-    image_predict += 1
-    if ret:
-        # Chuyen gray
-        # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    camera = cv2.VideoCapture(0)
+    # Load a trained KNN model (if one was passed in)
+    with open(os.path.join(dir_path, "model","trained_knn_model.clf"), 'rb') as f:
+        knn_clf = pickle.load(f)
 
-        img_draw = img
-        if image_predict >= 5:
-            image_predict = 0
-            predictions = predict(img, knn_clf)
-            # print(predictions)
+    image_predict = 0
+    predictions = ()
+    fps = 0
+    pre_time = time.time()
+    while (True):
+        ret, img = camera.read()
+        fps +=1
+        image_predict += 1
+        if ret:
+            # Chuyen gray
+            # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-            # Print results on the console
-        for name, (top, right, bottom, left) in predictions:
-            # print("- Found {} at ({}, {}) ".format(name, left, top))
-            # print("A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(top, left, bottom, right))
-            img_draw = cv2.rectangle(img_draw,(left,top),(right,bottom),(0,255,0),2)
-            # See if the face is a match for the known face(s)
-            (text_width, text_height) = cv2.getTextSize(name, cv2.FONT_HERSHEY_SIMPLEX,1,2)[0]
-            cv2.rectangle(img_draw,(left,bottom),(right,bottom + text_height + 20),(255,100,0), -1)
-            cv2.putText(img_draw, name, (left + 10, bottom + text_height + 10),cv2.FONT_HERSHEY_SIMPLEX, 0.8,(0,0,255), 2, cv2.LINE_AA)
+            img_draw = img
+            if image_predict >= 5:
+                image_predict = 0
+                predictions = predict(img, knn_clf)
+                # print(predictions)
 
-        cv2.imshow("Picture", img_draw)
-    key = cv2.waitKey(1)
-    if key==ord('q'):
-        break
-    elif key==ord('s'):
-        save_face(img)
+                # Print results on the console
+            for name, (top, right, bottom, left) in predictions:
+                # print("- Found {} at ({}, {}) ".format(name, left, top))
+                # print("A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(top, left, bottom, right))
+                img_draw = cv2.rectangle(img_draw,(left,top),(right,bottom),(0,255,0),2)
+                # See if the face is a match for the known face(s)
+                (text_width, text_height) = cv2.getTextSize(name, cv2.FONT_HERSHEY_SIMPLEX,1,2)[0]
+                cv2.rectangle(img_draw,(left,bottom),(right,bottom + text_height + 20),(255,100,0), -1)
+                cv2.putText(img_draw, name, (left + 10, bottom + text_height + 10),cv2.FONT_HERSHEY_SIMPLEX, 0.8,(0,0,255), 2, cv2.LINE_AA)
 
-    if(time.time() - pre_time) >= 1.0:
-        print("fps = {}".format(fps))
-        fps = 0
-        pre_time = time.time()
+            cv2.imshow("Picture", img_draw)
+        key = cv2.waitKey(1)
+        if key==ord('q'):
+            break
+        elif key==ord('s'):
+            save_face(img)
+
+        if(time.time() - pre_time) >= 1.0:
+            print("fps = {}".format(fps))
+            fps = 0
+            pre_time = time.time()
 
 
-camera.release()
-cv2.destroyAllWindows()
+    camera.release()
+    cv2.destroyAllWindows()
